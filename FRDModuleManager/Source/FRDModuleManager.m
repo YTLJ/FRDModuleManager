@@ -347,4 +347,41 @@ handleActionWithIdentifier:identifier
   }
 }
 
+#pragma mark - open url:
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    BOOL result = NO;
+    for (id<FRDModule> module in self.modules) {
+        if ([module respondsToSelector:_cmd]) {
+            result = result || [module application:application handleOpenURL:url];
+        }
+    }
+    return result;
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(id)annotation {
+    BOOL result = NO;
+    for (id<FRDModule> module in self.modules) {
+        if ([module respondsToSelector:_cmd]) {
+            result = result || [module application:application
+                                           openURL:url
+                                 sourceApplication:sourceApplication
+                                        annotation:annotation];
+        }
+    }
+    return result;
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    BOOL result = NO;
+    for (id<FRDModule> module in self.modules) {
+        if ([module respondsToSelector:_cmd]) {
+            result = result || [module application:app openURL:url options:options];
+        }
+    }
+    return result;
+}
 @end
